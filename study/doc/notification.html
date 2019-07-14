@@ -1,0 +1,55 @@
+<html>
+<head>
+
+</head>
+<body>
+    <div>
+        <button onclick="notifyMe()">Notify me!</button>
+    </div>
+<script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!Notification) {
+            alert('Desktop notifications not available in your browser. Try Chromium.');
+            return;
+        }
+
+        if (Notification.permission !== 'granted')
+            Notification.requestPermission();
+    });
+
+    function notifyMe() {
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        }
+
+        // Let's check if the user is okay to get some notification
+        else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification("Hi there!");
+        }
+
+        // Otherwise, we need to ask the user for permission
+        // Note, Chrome does not implement the permission static property
+        // So we have to check for NOT 'denied' instead of 'default'
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+
+                // Whatever the user answers, we make sure we store the information
+                if(!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+
+                // If the user is okay, let's create a notification
+                if (permission === "granted") {
+                    var notification = new Notification("Hi there!");
+                }
+            });
+        } else {
+            alert(`Permission is ${Notification.permission}`);
+        }
+    }
+</script>
+</body>
+</html>
